@@ -8,7 +8,7 @@ public class DirIndicatorScript : MonoBehaviour
         {
                 if (followTarget)
                 {
-                        transform.position = followTarget.position;
+                        //transform.position = followTarget.position;
                 }
         }
 }

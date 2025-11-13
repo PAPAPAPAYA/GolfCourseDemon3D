@@ -37,7 +37,7 @@ public class ClubManagerScript : MonoBehaviour
                 forceDebug = CalculateForce();
         }
 
-        public float CalculateForce()
+        private float CalculateForce()
         {
                 force.value = minForce + _inputMan.mouseDragDuration * holdToForceRatio;
                 force.value  = Mathf.Clamp(force.value, minForce, maxForce);
@@ -50,5 +50,7 @@ public class ClubManagerScript : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0, 0, -UtilityFuncManagerScript.me.ConvertV3ToAngle(_inputMan.mouseDragDir));
                 // move
                 rbToMove.AddForce(-_inputMan.mouseDragDir * CalculateForce(), ForceMode.Impulse);
+                // reset drag duration
+                _inputMan.mouseDragDuration = 0;
         }
 }

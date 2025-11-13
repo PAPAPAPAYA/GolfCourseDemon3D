@@ -29,7 +29,8 @@ public class Isometric3DInputManagerScript : MonoBehaviour
                 }
                 if (Input.GetMouseButtonUp(0)) // mouse up frame
                 {
-                        mouseDragDuration = 0;
+                        // mouseDragDuration = 0;
+                        // reset in ClubManagerScript
                 }
                 // project mouse position to a plane, hitPoint being the projected pos
                 // this creates a horizontal plane passing through this object's center

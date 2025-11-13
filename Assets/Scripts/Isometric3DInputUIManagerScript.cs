@@ -7,6 +7,7 @@ public class Isometric3DInputUIManagerScript : MonoBehaviour
         private Isometric3DInputManagerScript _inputMan;
         public FloatRefSO force;
         public Vector3 dirIndicatorSize = new(0.1f, 0.1f, 0.1f);
+        public GameObject currentBall;
         
         private void Start()
         {
@@ -18,7 +19,7 @@ public class Isometric3DInputUIManagerScript : MonoBehaviour
         }
         private void UpdateDirIndicator()
         {
-                var ogPos = dirIndicator.transform.position;
+                var ogPos = currentBall.transform.position;
                 if (Input.GetMouseButtonDown(0))
                 {
                         ogPos = dirIndicator.transform.position;
@@ -30,13 +31,15 @@ public class Isometric3DInputUIManagerScript : MonoBehaviour
                         // offset based on strike force
                         var offset = -_inputMan.mouseDragDir * (force.value * forceToIndicatorLengthRatio);
                         dirIndicator.transform.position = ogPos + offset;
+                        //print(ogPos + offset);
+                        //print("dirindicator pos: "+dirIndicator.transform.position);
                         // change indicator direction, opposite of drag dir
                         dirIndicator.transform.rotation = Quaternion.Euler(
                                 0, 
                                 UtilityFuncManagerScript.me.ConvertV3ToAngle(_inputMan.mouseDragDir), 
                                 0);
                 }
-                else
+                if (!_inputMan.mouseDown || _inputMan.mouseDragDir.magnitude <= 0)
                 {
                         // hide indicator
                         dirIndicator.transform.localScale = new Vector3(0, 0, 0);
