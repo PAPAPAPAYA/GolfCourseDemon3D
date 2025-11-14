@@ -7,7 +7,7 @@ public class Isometric3DInputUIManagerScript : MonoBehaviour
         private Isometric3DInputManagerScript _inputMan;
         public FloatRefSO force;
         public Vector3 dirIndicatorSize = new(0.1f, 0.1f, 0.1f);
-        public GameObject currentBall;
+        
         
         private void Start()
         {
@@ -19,7 +19,7 @@ public class Isometric3DInputUIManagerScript : MonoBehaviour
         }
         private void UpdateDirIndicator()
         {
-                var ogPos = currentBall.transform.position;
+                var ogPos = GameManagerScript.me.currentBall.transform.position;
                 if (Input.GetMouseButtonDown(0))
                 {
                         ogPos = dirIndicator.transform.position;

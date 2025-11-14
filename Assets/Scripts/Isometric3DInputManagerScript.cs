@@ -8,7 +8,7 @@ public class Isometric3DInputManagerScript : MonoBehaviour
         public Vector3 mouseDownPos = Vector3.zero; // mouse held down position
         public Vector3 mouseDragDir = Vector3.zero; // mouse dragged direction
         public float mouseDragDuration = 0; // how long mouse held down
-        public float mouseDragDegree;
+        public float mouseDragDegree; // only for debugging
         #endregion
         #region SINGLETON
         public static Isometric3DInputManagerScript me;
@@ -23,14 +23,14 @@ public class Isometric3DInputManagerScript : MonoBehaviour
                 // mouse status tracking
                 mouseDown = Input.GetMouseButton(0); // updates if dragging
                 // record mouse drag duration
-                if (mouseDown) // mouse hold
+                if (mouseDown &&
+                    mouseDragDir.magnitude > 0.1f) // mouse hold
                 {
                         mouseDragDuration += Time.deltaTime;
                 }
                 if (Input.GetMouseButtonUp(0)) // mouse up frame
                 {
-                        // mouseDragDuration = 0;
-                        // reset in ClubManagerScript
+                         mouseDragDuration = 0;
                 }
                 // project mouse position to a plane, hitPoint being the projected pos
                 // this creates a horizontal plane passing through this object's center

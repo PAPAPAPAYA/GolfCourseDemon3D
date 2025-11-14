@@ -26,6 +26,7 @@ public class ClubManagerScript : MonoBehaviour
         private void Start()
         {
                 _inputMan = Isometric3DInputManagerScript.me;
+                //rbToMove = GameManagerScript.me.currentBall.GetComponent<Rigidbody>(); // need to think of a system to prevent null situation
         }
 
         private void Update()
@@ -49,7 +50,7 @@ public class ClubManagerScript : MonoBehaviour
                 // rotate
                 transform.rotation = Quaternion.Euler(0, 0, -UtilityFuncManagerScript.me.ConvertV3ToAngle(_inputMan.mouseDragDir));
                 // move
-                rbToMove.AddForce(-_inputMan.mouseDragDir * CalculateForce(), ForceMode.Impulse);
+                GameManagerScript.me.currentBall.GetComponent<Rigidbody>().AddForce(-_inputMan.mouseDragDir * CalculateForce(), ForceMode.Impulse);
                 // reset drag duration
                 _inputMan.mouseDragDuration = 0;
         }

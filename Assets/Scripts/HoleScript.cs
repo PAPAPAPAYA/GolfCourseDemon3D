@@ -8,6 +8,8 @@ public class HoleScript : MonoBehaviour
                 if (other.CompareTag("Ball"))
                 {
                         print("goal");
+                        ObjectPoolerScript.me.BallPool.Release(other.gameObject);
+                        GameManagerScript.me.currentBall = null;
                 }
         }
 }
