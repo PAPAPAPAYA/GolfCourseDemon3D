@@ -23,8 +23,8 @@ public class Isometric3DInputManagerScript : MonoBehaviour
                 // mouse status tracking
                 mouseDown = Input.GetMouseButton(0); // updates if dragging
                 // record mouse drag duration
-                if (mouseDown &&
-                    mouseDragDir.magnitude > 0.1f) // mouse hold
+                if (mouseDown && // mouse hold
+                    mouseDragDir.magnitude > 0.1f) // dragging
                 {
                         mouseDragDuration += Time.deltaTime;
                 }

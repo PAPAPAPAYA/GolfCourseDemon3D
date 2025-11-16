@@ -11,31 +11,36 @@ public class GameManagerScript : MonoBehaviour
         }
         #endregion
         public GameObject currentBall;
-        private Rigidbody ballRB;
+        private Rigidbody _ballRb;
         public Isometric3DInputUIManagerScript inputUIManager;
         public ClubManagerScript clubManager;
+        public Isometric3DInputManagerScript inputManager;
 
         private void Update()
         {
                 // only allow player to strike and show strike ui when there is a "selected" ball
                 // also, when current ball is not moving
                 if (currentBall &&
-                    ballRB.linearVelocity.magnitude < 0.1f &&
-                    ballRB.angularVelocity.magnitude < 0.1f)
+                    _ballRb.linearVelocity.magnitude < 0.1f &&
+                    _ballRb.angularVelocity.magnitude < 0.1f)
                 {
                         inputUIManager.gameObject.SetActive(true);
+                        
+                        inputManager.gameObject.SetActive(true);
                         clubManager.gameObject.SetActive(true);
                 }
                 else
                 {
                         inputUIManager.gameObject.SetActive(false);
                         clubManager.gameObject.SetActive(false);
+                        inputManager.gameObject.SetActive(false);
+                        
                 }
         }
 
         public void AssignCurrentBall(GameObject ball)
         {
                 currentBall = ball;
-                ballRB =  ball.GetComponent<Rigidbody>();
+                _ballRb =  ball.GetComponent<Rigidbody>();
         }
 }

@@ -1,25 +1,55 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BallScript : MonoBehaviour
 {
-        private Rigidbody myRB;
+        private Rigidbody _myRb;
+        public GameObject highLight;
+        private bool _stopped;
+        private bool _mouseHovering;
         private void OnEnable()
         {
-                myRB = GetComponent<Rigidbody>();
+                _myRb = GetComponent<Rigidbody>();
         }
         private void Update()
         {
-                if (myRB.linearVelocity.magnitude > .1f)print(myRB.linearVelocity);
-                if (myRB.angularVelocity.magnitude > .1f)print(myRB.angularVelocity);
-                
-                if (Mathf.Abs(myRB.linearVelocity.x) < .7f && 
-                    Mathf.Abs(myRB.linearVelocity.z) < .7f &&
-                    Mathf.Abs(myRB.linearVelocity.y) < .1f &&
-                    myRB.angularVelocity.magnitude < .7f)
+                if (Mathf.Abs(_myRb.linearVelocity.x) < .7f && 
+                    Mathf.Abs(_myRb.linearVelocity.z) < .7f &&
+                    Mathf.Abs(_myRb.linearVelocity.y) < .1f &&
+                    _myRb.angularVelocity.magnitude < .7f)
                 {
-                        myRB.linearVelocity = Vector3.zero;
-                        myRB.angularVelocity = Vector3.zero;
+                        _myRb.linearVelocity = Vector3.zero;
+                        _myRb.angularVelocity = Vector3.zero;
+                        _stopped = true;
+                }
+                else
+                {
+                        _stopped = false;
+                }
+        }
+
+        private void OnMouseEnter()
+        {
+                if (_stopped)
+                {
+                        highLight.SetActive(true);
+                        highLight.transform.position = transform.position + new Vector3(0,-0.05f,0);
+                        _mouseHovering = true;
+                }
+        }
+
+        private void OnMouseExit()
+        {
+                highLight.SetActive(false);
+                _mouseHovering = false;
+        }
+
+        private void OnMouseDown()
+        {
+                if (_mouseHovering)
+                {
+                        GameManagerScript.me.currentBall = gameObject;
                 }
         }
 }

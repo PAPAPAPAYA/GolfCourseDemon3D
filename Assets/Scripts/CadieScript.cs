@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CadieScript : MonoBehaviour
 {
+        public GameObject hightLight;
         private void Start()
         {
                 // spawn the first ball
@@ -14,6 +15,10 @@ public class CadieScript : MonoBehaviour
                 {
                         ServeBall();
                 }
+                if(Input.GetKeyDown(KeyCode.B))
+                {
+                        ServeBall();
+                }
         }
 
         private void ServeBall()
@@ -22,6 +27,7 @@ public class CadieScript : MonoBehaviour
                 newBall.transform.position = transform.position;
                 newBall.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
                 newBall.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                newBall.GetComponent<BallScript>().highLight = hightLight;
                 GameManagerScript.me.AssignCurrentBall(newBall);
         }
 }
