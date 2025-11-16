@@ -24,10 +24,12 @@
                 //// step logic
                         //// after placing down one tile, step one
                         //// detect which way to go
-                //// wfc logic
+                // wfc logic
                         //// store side info on each tile
                         //// get side info to determine which tile is fit
                         //// place down tile
+                        // probability
+                        // it might run into dead end prematurely
                 // dynamically more tile maker
                 // ramps
 // support system

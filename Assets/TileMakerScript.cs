@@ -8,10 +8,12 @@ public class TileMakerScript : MonoBehaviour
 {
     public int placedTilesCount = 0;
     public float stepDist;
-    public int stepAmount;
+    public int spawnAmount;
+    public int currentAmount = 0;
     public List<GameObject> tilePool;
-    public List<GameObject> start;
-    public List<GameObject> end;
+    public List<GameObject> tilePoolStart;
+    public List<GameObject> tilePoolEnd;
+    public List<GameObject> tilePoolCurrent;
     public GameObject tileParent;
 
     public TileScript lastTile;
@@ -34,6 +36,10 @@ public class TileMakerScript : MonoBehaviour
     public EnumManagerScript.SideType rightSituation;
     public EnumManagerScript.SideType downSituation;
     public EnumManagerScript.SideType leftSituation;
+
+    public float spawnInterval;
+    public float spawnTimer;
+    public bool startSpawn = false;
     
     private void Start()
     {
@@ -98,34 +104,57 @@ public class TileMakerScript : MonoBehaviour
         Debug.DrawRay(transform.position + rayOffset, Vector3.right * 1, Color.red);
         Debug.DrawRay(transform.position + rayOffset, Vector3.back * 1, Color.red);
         Debug.DrawRay(transform.position + rayOffset, Vector3.left * 1, Color.red);
-        
-        
-        
+
+
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //for (int i = 0; i < stepAmount; i++)
+            startSpawn = true;
+        }
+        if (startSpawn)
+        {
+            if (currentAmount == spawnAmount) return;
+            spawnTimer += Time.deltaTime;
+            if (spawnTimer >= spawnInterval)
             {
+                spawnTimer -= spawnInterval;
                 GetAvailableTiles();
                 if (availableTiles.Count <= 0) return;
                 PlaceDownTile();
+                currentAmount++;
                 GetAvailableDirs();
                 if (availableDirs.Count <= 0) return;
                 Step();
             }
+        } 
+        for (var i = 0; i < spawnAmount; i++)
+        {
+            
+            
         }
+        
     }
 
     private void GetAvailableTiles()
     {
         availableTiles.Clear();
+        // decide what tile pool to use
         // check if putting down first tile
         if (placedTilesCount <= 0)
         {
-            UtilityFuncManagerScript.me.CopyGameObjectList(start, availableTiles);
-            return;
+            UtilityFuncManagerScript.me.CopyGameObjectList(tilePoolStart, tilePoolCurrent);
         }
-        if (tilePool.Count <= 0) return;
-        foreach (var currentTile in tilePool) // get each tiles in tile pool
+        // check if deciding last tile
+        else if (currentAmount == spawnAmount - 1)
+        {
+            UtilityFuncManagerScript.me.CopyGameObjectList(tilePoolEnd, tilePoolCurrent);
+        }
+        else // not the first nor last tile, use normal tile pool
+        {
+            UtilityFuncManagerScript.me.CopyGameObjectList(tilePool, tilePoolCurrent);
+        }
+        if (tilePoolCurrent.Count <= 0) return;
+        foreach (var currentTile in tilePoolCurrent) // get each tiles in tile pool
         {
             var ts = currentTile.GetComponent<TileScript>();
             if ((ts.up == upSituation || upSituation == EnumManagerScript.SideType.None) &&
