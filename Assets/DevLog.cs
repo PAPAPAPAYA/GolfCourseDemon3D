@@ -1,9 +1,12 @@
 // 3d golf course demon
 // features
+        // ball
+                // change physic mat to bounce off wall
         // strike ball
                 //// strike
                 //// only strikable if ball has no speed
-                //// multi ball situation: click on ball to select
+                // multi ball situation: click on ball to select
+                        // difficult to select ball
                 //// don't accumulate mouse drag duration if mouse isn't moving
         // hole
                 //// eat ball
@@ -20,7 +23,7 @@
         // level generation
                 // assign hole script
                 //// place down start tile
-                // place down hole tile
+                //// place down hole tile
                 //// step logic
                         //// after placing down one tile, step one
                         //// detect which way to go
@@ -31,6 +34,11 @@
                         // probability
                         // it might run into dead end prematurely
                 // dynamically more tile maker
-                // ramps
+                // ramps & slopes
+                // disconnection
+                // open spaces
+                        // walled left <-> walled right
 // support system
+        //// camera
+                //// basic follow ball func
         //// strike ball ui

@@ -6,7 +6,10 @@ public class EnumManagerScript : MonoBehaviour
     {
         None,
         Wall,
-        WalledPath
+        WalledPath,
+        WalledLeft,
+        WalledRight,
+        Open
     };
 
     public enum Direction

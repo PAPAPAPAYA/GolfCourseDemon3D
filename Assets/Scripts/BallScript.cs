@@ -7,7 +7,7 @@ public class BallScript : MonoBehaviour
         private Rigidbody _myRb;
         public GameObject highLight;
         private bool _stopped;
-        private bool _mouseHovering;
+        public bool _mouseHovering;
         private void OnEnable()
         {
                 _myRb = GetComponent<Rigidbody>();
