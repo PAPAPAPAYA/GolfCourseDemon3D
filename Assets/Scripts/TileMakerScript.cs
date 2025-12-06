@@ -43,7 +43,7 @@ public class TileMakerScript : MonoBehaviour
     
     private void Start()
     {
-        //PlaceDownTile();
+        startSpawn = true;
     }
 
     private void Update()
@@ -132,7 +132,6 @@ public class TileMakerScript : MonoBehaviour
             
             
         }
-        
     }
 
     private void GetAvailableTiles()
@@ -157,10 +156,11 @@ public class TileMakerScript : MonoBehaviour
         foreach (var currentTile in tilePoolCurrent) // get each tiles in tile pool
         {
             var ts = currentTile.GetComponent<TileScript>();
-            if ((ts.up == upSituation || upSituation == EnumManagerScript.SideType.None) &&
-                (ts.right == rightSituation || rightSituation == EnumManagerScript.SideType.None) &&
-                (ts.down == downSituation || downSituation == EnumManagerScript.SideType.None) &&
-                (ts.left == leftSituation || leftSituation == EnumManagerScript.SideType.None))
+            //todo: just make side info as array and open side is also walled path
+            if ((ts.up == upSituation || upSituation == EnumManagerScript.SideType.None || ts.up == EnumManagerScript.SideType.Open || upSituation == EnumManagerScript.SideType.Open) &&
+                (ts.right == rightSituation || rightSituation == EnumManagerScript.SideType.None || ts.right == EnumManagerScript.SideType.Open || rightSituation == EnumManagerScript.SideType.Open) &&
+                (ts.down == downSituation || downSituation == EnumManagerScript.SideType.None || ts.down == EnumManagerScript.SideType.Open || downSituation == EnumManagerScript.SideType.Open) &&
+                (ts.left == leftSituation || leftSituation == EnumManagerScript.SideType.None || ts.left == EnumManagerScript.SideType.Open || leftSituation == EnumManagerScript.SideType.Open))
             {
                 if (!availableTiles.Contains(currentTile))
                 {
@@ -184,6 +184,7 @@ public class TileMakerScript : MonoBehaviour
         // clear available dirs
         availableDirs.Clear();
         // get available directions
+        // walled directions
         if (!lastTile || lastTile.up == EnumManagerScript.SideType.WalledPath) 
         {
             availableDirs.Add(EnumManagerScript.Direction.Up);
@@ -200,6 +201,25 @@ public class TileMakerScript : MonoBehaviour
         {
             availableDirs.Add(EnumManagerScript.Direction.Left);
         }
+        
+        // open directions
+        if (!lastTile || lastTile.up == EnumManagerScript.SideType.Open)
+        {
+            availableDirs.Add(EnumManagerScript.Direction.Up);
+        }
+        if (!lastTile || lastTile.right == EnumManagerScript.SideType.Open)
+        {
+            availableDirs.Add(EnumManagerScript.Direction.Right);
+        }
+        if (!lastTile || lastTile.down == EnumManagerScript.SideType.Open)
+        {
+            availableDirs.Add(EnumManagerScript.Direction.Down);
+        }
+        if (!lastTile || lastTile.left == EnumManagerScript.SideType.Open)
+        {
+            availableDirs.Add(EnumManagerScript.Direction.Up);
+        }
+        
         // remove opposite dir of last move dir from available dirs to avoid going back
         switch (lastMoveDir)
         {
