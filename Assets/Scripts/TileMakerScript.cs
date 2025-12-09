@@ -32,10 +32,10 @@ public class TileMakerScript : MonoBehaviour
     private RaycastHit _downHitData;
     private Ray _leftRay = new Ray();
     private RaycastHit _leftHitData;
-    public EnumManagerScript.SideType upSituation;
-    public EnumManagerScript.SideType rightSituation;
-    public EnumManagerScript.SideType downSituation;
-    public EnumManagerScript.SideType leftSituation;
+    public List<EnumManagerScript.SideType> upSituation;
+    public List<EnumManagerScript.SideType> rightSituation;
+    public List<EnumManagerScript.SideType> downSituation;
+    public List<EnumManagerScript.SideType> leftSituation;
 
     public float spawnInterval;
     public float spawnTimer;
@@ -64,7 +64,8 @@ public class TileMakerScript : MonoBehaviour
         }
         else
         {
-            upSituation = EnumManagerScript.SideType.None;
+            upSituation.Clear();
+            upSituation.Add(EnumManagerScript.SideType.None);
         }
         if (Physics.Raycast(_rightRay, out _rightHitData, 1))
         {
@@ -75,7 +76,8 @@ public class TileMakerScript : MonoBehaviour
         }
         else
         {
-            rightSituation = EnumManagerScript.SideType.None;
+            rightSituation.Clear();
+            rightSituation.Add(EnumManagerScript.SideType.None);
         }
         if (Physics.Raycast(_downRay, out _downHitData, 1))
         {
@@ -86,7 +88,8 @@ public class TileMakerScript : MonoBehaviour
         }
         else
         {
-            downSituation = EnumManagerScript.SideType.None;
+            downSituation.Clear();
+            downSituation.Add(EnumManagerScript.SideType.None);
         }
         if (Physics.Raycast(_leftRay, out _leftHitData, 1))
         {
@@ -97,7 +100,8 @@ public class TileMakerScript : MonoBehaviour
         }
         else
         {
-            leftSituation = EnumManagerScript.SideType.None;
+            leftSituation.Clear();
+            leftSituation.Add(EnumManagerScript.SideType.None);
         }
         // draw rays
         Debug.DrawRay(transform.position + rayOffset, Vector3.forward * 1, Color.red);
@@ -156,11 +160,13 @@ public class TileMakerScript : MonoBehaviour
         foreach (var currentTile in tilePoolCurrent) // get each tiles in tile pool
         {
             var ts = currentTile.GetComponent<TileScript>();
-            //todo: just make side info as array and open side is also walled path
-            if ((ts.up == upSituation || upSituation == EnumManagerScript.SideType.None || ts.up == EnumManagerScript.SideType.Open || upSituation == EnumManagerScript.SideType.Open) &&
-                (ts.right == rightSituation || rightSituation == EnumManagerScript.SideType.None || ts.right == EnumManagerScript.SideType.Open || rightSituation == EnumManagerScript.SideType.Open) &&
-                (ts.down == downSituation || downSituation == EnumManagerScript.SideType.None || ts.down == EnumManagerScript.SideType.Open || downSituation == EnumManagerScript.SideType.Open) &&
-                (ts.left == leftSituation || leftSituation == EnumManagerScript.SideType.None || ts.left == EnumManagerScript.SideType.Open || leftSituation == EnumManagerScript.SideType.Open))
+            // check if tile's side matches tiles around
+            if (
+                CheckSide(ts.up, upSituation) &&
+                CheckSide(ts.right, rightSituation) &&
+                CheckSide(ts.down, downSituation) &&
+                CheckSide(ts.left, leftSituation)
+                )
             {
                 if (!availableTiles.Contains(currentTile))
                 {
@@ -168,6 +174,24 @@ public class TileMakerScript : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool CheckSide(List<EnumManagerScript.SideType> currentSideType, List<EnumManagerScript.SideType> otherSideType)
+    {
+        
+        if (otherSideType.Contains(EnumManagerScript.SideType.None) ||
+            currentSideType.Contains(EnumManagerScript.SideType.Open)) // if side in question is open, then it doesn't matter
+        {
+            return true;
+        }
+        foreach (var sideType in currentSideType)
+        {
+            if (otherSideType.Contains(sideType))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void PlaceDownTile()
@@ -185,39 +209,21 @@ public class TileMakerScript : MonoBehaviour
         availableDirs.Clear();
         // get available directions
         // walled directions
-        if (!lastTile || lastTile.up == EnumManagerScript.SideType.WalledPath) 
+        if (!lastTile || lastTile.up.Contains(EnumManagerScript.SideType.WalledPath)) 
         {
             availableDirs.Add(EnumManagerScript.Direction.Up);
         }
-        if (!lastTile || lastTile.right == EnumManagerScript.SideType.WalledPath)
+        if (!lastTile || lastTile.right.Contains(EnumManagerScript.SideType.WalledPath))
         {
             availableDirs.Add(EnumManagerScript.Direction.Right);
         }
-        if (!lastTile || lastTile.down == EnumManagerScript.SideType.WalledPath)
+        if (!lastTile || lastTile.down.Contains(EnumManagerScript.SideType.WalledPath))
         {
             availableDirs.Add(EnumManagerScript.Direction.Down);
         }
-        if (!lastTile || lastTile.left == EnumManagerScript.SideType.WalledPath)
+        if (!lastTile || lastTile.left.Contains(EnumManagerScript.SideType.WalledPath))
         {
             availableDirs.Add(EnumManagerScript.Direction.Left);
-        }
-        
-        // open directions
-        if (!lastTile || lastTile.up == EnumManagerScript.SideType.Open)
-        {
-            availableDirs.Add(EnumManagerScript.Direction.Up);
-        }
-        if (!lastTile || lastTile.right == EnumManagerScript.SideType.Open)
-        {
-            availableDirs.Add(EnumManagerScript.Direction.Right);
-        }
-        if (!lastTile || lastTile.down == EnumManagerScript.SideType.Open)
-        {
-            availableDirs.Add(EnumManagerScript.Direction.Down);
-        }
-        if (!lastTile || lastTile.left == EnumManagerScript.SideType.Open)
-        {
-            availableDirs.Add(EnumManagerScript.Direction.Up);
         }
         
         // remove opposite dir of last move dir from available dirs to avoid going back
@@ -248,6 +254,47 @@ public class TileMakerScript : MonoBehaviour
             {
                 //print(availableDirs[i] + " " + moveDirToRemove);
                 availableDirs.RemoveAt(i);
+            }
+        }
+        // remove dirs if corresponding side info is not none, so tiles won't overlap
+        if (!upSituation.Contains(EnumManagerScript.SideType.None))
+        {
+            for (var i = availableDirs.Count; i --> 0; )
+            {
+                if (availableDirs[i].Equals(EnumManagerScript.Direction.Up))
+                {
+                    availableDirs.RemoveAt(i);
+                }
+            }
+        }
+        if (!rightSituation.Contains(EnumManagerScript.SideType.None))
+        {
+            for (var i = availableDirs.Count; i --> 0; )
+            {
+                if (availableDirs[i].Equals(EnumManagerScript.Direction.Right))
+                {
+                    availableDirs.RemoveAt(i);
+                }
+            }
+        }
+        if (!downSituation.Contains(EnumManagerScript.SideType.None))
+        {
+            for (var i = availableDirs.Count; i --> 0; )
+            {
+                if (availableDirs[i].Equals(EnumManagerScript.Direction.Down))
+                {
+                    availableDirs.RemoveAt(i);
+                }
+            }
+        }
+        if (!leftSituation.Contains(EnumManagerScript.SideType.None))
+        {
+            for (var i = availableDirs.Count; i --> 0; )
+            {
+                if (availableDirs[i].Equals(EnumManagerScript.Direction.Left))
+                {
+                    availableDirs.RemoveAt(i);
+                }
             }
         }
     }

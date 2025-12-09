@@ -21,9 +21,12 @@
                 //// destroy ball when out of bounds
         // automation 
         // level generation
-                //! try to use open as many as possible?
-                //! make side info array, tag system, so that open can be open and walled path at the same time
-                // assign hole script
+                // gap between tiles, try CombineMeshesScript
+                ////! try to use open as many as possible?
+                        //// open can be placed next to any types, but only walled path and open can be placed next to open
+                        // might have other problems
+                ////! make side info array, tag system, so that open can be open and walled path at the same time
+                //// assign hole script
                 //// place down start tile
                 //// place down hole tile
                 //// step logic
@@ -35,6 +38,7 @@
                         //// place down tile
                         // probability
                         // it might run into dead end prematurely
+                                //! try taking out available tiles if the tiles' possible paths lead to dead ends
                 //! dynamically more and less tile makers
                         // deactivate maker if stuck
                         // spawn new makers if split or open

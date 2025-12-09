@@ -42,6 +42,17 @@ public class UtilityFuncManagerScript : MonoBehaviour
 			to.Add(gO);
 		}
 	}
+	// copy side info list
+	public void CopySideInfoList(List<EnumManagerScript.SideType> from, List<EnumManagerScript.SideType> to)
+	{
+		to.Clear();
+		foreach (var gO in from)
+		{
+			to.Add(gO);
+		}
+	}
+	
+	
 	// copy ability list
 	// public void CopyList(List<AbilityManagerScript.Abilities> from, List<AbilityManagerScript.Abilities> to)
 	// {
